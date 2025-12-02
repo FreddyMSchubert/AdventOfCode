@@ -1,7 +1,9 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 
-// 452
+// 5856
+// 6851
+// 5847
 
 public class Main
 {
@@ -9,6 +11,7 @@ public class Main
     {
         int currentNotch = 50;
         int zeroNotches = 0;
+        int passedZeroCount = 0;
 
         try (BufferedReader br = new BufferedReader(new FileReader("./src/input.txt"))) {
             String line;
@@ -19,20 +22,20 @@ public class Main
 
                 System.out.println("Line: " + line + "; char: " + directionChar + "; num: " + num);
 
-                if (directionChar == 'L')
-                    currentNotch -= num;
-                else
-                    currentNotch += num;
+                while (num > 0)
+                {
+                    if (directionChar == 'L')
+                        currentNotch--;
+                    else
+                        currentNotch++;
+                    if (currentNotch > 99) currentNotch = 0;
+                    if (currentNotch < 0) currentNotch = 99;
+                    if (currentNotch == 0) passedZeroCount++;
 
-                while (currentNotch >= 100)
-                    currentNotch -= 100;
-                while (currentNotch < 0)
-                    currentNotch += 100;
+                    num--;
+                }
 
-                if (currentNotch == 0)
-                    zeroNotches++;
-
-                System.out.println("currentNotch: " + currentNotch + "; zeroNotches: " + zeroNotches);
+                System.out.println("currentNotch: " + currentNotch + "; zeroNotches: " + zeroNotches + "; passedZeroCount: " + passedZeroCount);
             }
         }
         catch (Exception e)
