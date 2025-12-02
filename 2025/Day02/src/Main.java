@@ -2,18 +2,30 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.math.BigInteger;
 
-// 35367539283 too high
-
 public class Main
 {
     public static boolean isInvalidId(String id)
     {
-        if (id.length() % 2 != 0) return false;
-        int halfPos = id.length() / 2;
-        for (int i = 0; i < halfPos; i ++)
-            if (id.charAt(i) != id.charAt(i + halfPos))
-                return false;
-        return true;
+        for (int assumedPairs = 2; assumedPairs <= id.length(); assumedPairs++)
+        {
+            if ((id.length() / assumedPairs) * assumedPairs != id.length())
+                continue;
+            boolean repeating = true;
+            int firstSegmentPos = id.length() / assumedPairs;
+            for (int pos = 0; pos < firstSegmentPos; pos ++)
+            {
+                for (int i = 1; i < assumedPairs; i ++)
+                    if (id.charAt(pos) != id.charAt((firstSegmentPos * i) + pos))
+                        repeating = false;
+            }
+            if (repeating)
+            {
+                System.out.println("Number " + id + " is an invalid id as the numbers repeat " + assumedPairs + " times.");
+                return true;
+            }
+        }
+        // System.out.println("Number " + id + " is a valid id as it doesn't repeat.");
+        return false;
     }
 
     public static void main(String[] args)
@@ -32,10 +44,8 @@ public class Main
                 System.out.println("Parsed range parts: " + rangeMin + "-" + rangeMax);
 
                 for (BigInteger i = rangeMin; i.compareTo(rangeMax) < 1; i = i.add(BigInteger.ONE))
-                {
                     if (isInvalidId(String.valueOf(i)))
                         invalidIdSum = invalidIdSum.add(i);
-                }
             }
         }
         catch (Exception e)
