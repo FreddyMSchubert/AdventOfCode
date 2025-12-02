@@ -3,3 +3,5 @@ christmasIsComing
 .DS_Store
 *.dSYM
 *.o
+.idea
+*.iml
