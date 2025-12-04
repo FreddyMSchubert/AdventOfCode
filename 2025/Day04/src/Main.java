@@ -30,30 +30,61 @@ public class Main
             }
 
             int totalAccessibleRolls = 0;
+            int iteration = 0;
 
-            for (int y = 0; y < map.size(); y++) {
-                for (int x = 0; x < map.get(y).length(); x++) {
-                    if (map.get(y).charAt(x) != '@')
-                        continue;
+            while (true)
+            {
+                List<Integer> accessibleRollsX = new ArrayList<>();
+                List<Integer> accessibleRollsY = new ArrayList<>();
 
-                    int rollsCount = 0;
-                    for (int dy = -1; dy <= 1; dy++) {
-                        for (int dx = -1; dx <= 1; dx++) {
-                            int localY = y + dy;
-                            int localX = x + dx;
-                            if (localY < 0 || localY >= map.size() || localX < 0 || localX >= map.get(localY).length())
-                                continue;
-                            if (localY == y && localX == x)
-                                continue;
-                            if (map.get(localY).charAt(localX) == '@')
-                                rollsCount++;
+                for (int y = 0; y < map.size(); y++)
+                {
+                    for (int x = 0; x < map.get(y).length(); x++)
+                    {
+                        if (map.get(y).charAt(x) != '@')
+                            continue;
+
+                        int rollsCount = 0;
+                        for (int dy = -1; dy <= 1; dy++)
+                        {
+                            for (int dx = -1; dx <= 1; dx++)
+                            {
+                                int localY = y + dy;
+                                int localX = x + dx;
+                                if (localY < 0 || localY >= map.size() || localX < 0 || localX >= map.get(localY).length())
+                                    continue;
+                                if (localY == y && localX == x)
+                                    continue;
+                                if (map.get(localY).charAt(localX) == '@')
+                                    rollsCount++;
+                            }
+                        }
+                        if (rollsCount < 4)
+                        {
+                            accessibleRollsX.add(x);
+                            accessibleRollsY.add(y);
+                            System.out.println("Accessible roll found at [" + x + "|" + y + "].");
                         }
                     }
-                    if (rollsCount < 4)
-                    {
-                        totalAccessibleRolls++;
-                        System.out.println("Accessible roll found at [" + x + "|" + y + "].");
-                    }
+                }
+
+                if (accessibleRollsX.size() <= 0)
+                {
+                    break;
+                }
+
+                totalAccessibleRolls += accessibleRollsX.size();
+
+                System.out.println("Iteration " + iteration + ": " + accessibleRollsX.size() + " rolls cleared out.");
+                iteration++;
+
+                for (int i = 0; i < accessibleRollsX.size(); i++)
+                {
+                    int x = accessibleRollsX.get(i);
+                    int y = accessibleRollsY.get(i);
+                    char[] charString = map.get(y).toCharArray();
+                    charString[x] = 'x';
+                    map.set(y, String.copyValueOf(charString));
                 }
             }
 
