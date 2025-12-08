@@ -25,6 +25,12 @@ public class Main
             junctionBox.calcDistances(junctionBoxes);
         }
 
+        partTwo(junctionBoxes);
+        // partOne(junctionBoxes);
+    }
+
+    public static void partOne(ArrayList<JunctionBox> junctionBoxes)
+    {
         for (int i = 0; i < 1000; i++) {
             JunctionBox bestFrom = null;
             JunctionBox bestTo = null;
@@ -90,16 +96,58 @@ public class Main
         System.out.println("Three largest circuits: " + foundNetworkSizes.get(0) * foundNetworkSizes.get(1) * foundNetworkSizes.get(2) + ".");
     }
 
-    public static boolean areJunctionBoxesConnected(JunctionBox box1, JunctionBox box2, ArrayList<JunctionBox> alreadyChecked) {
-        if (box1 == box2)
-            return true;
-        alreadyChecked.add(box1);
-        for (JunctionBox connection : box1.connections) {
-            if (alreadyChecked.contains(connection))
-                continue;
-            if (areJunctionBoxesConnected(connection, box2, alreadyChecked))
-                return true;
+    public static void partTwo(ArrayList<JunctionBox> junctionBoxes) {
+        while (!areAllJunctionBoxesConnected(junctionBoxes)) {
+            JunctionBox bestFrom = null;
+            JunctionBox bestTo = null;
+            double bestDistance = Double.MAX_VALUE;
+            for (JunctionBox from : junctionBoxes) {
+                for (Map.Entry<JunctionBox, Double> entry : from.distances.entrySet()) {
+                    JunctionBox to = entry.getKey();
+                    double connDist = entry.getValue();
+
+                    if (from.getString().compareTo(to.getString()) >= 0) {
+                        continue;
+                    }
+
+                    if (from.connections.contains(to)) {
+                        continue;
+                    }
+
+                    if (connDist < bestDistance) {
+                        bestDistance = connDist;
+                        bestFrom = from;
+                        bestTo = to;
+                    }
+                }
+            }
+
+            if (bestFrom == null) {
+                break;
+            }
+
+            // establish connection
+            bestFrom.connections.add(bestTo);
+            bestTo.connections.add(bestFrom);
+            System.out.println("Established connection between " + bestFrom.getString() + " and " + bestTo.getString() + ".");
         }
-        return false;
+    }
+    public static boolean areAllJunctionBoxesConnected(ArrayList<JunctionBox> junctionBoxes) {
+        ArrayList<JunctionBox> unconnectedJunctionBoxes = new ArrayList<>(junctionBoxes);
+        Set<JunctionBox> junctionBoxesToCheck = new HashSet<>(unconnectedJunctionBoxes.getFirst().connections);
+        unconnectedJunctionBoxes.remove(unconnectedJunctionBoxes.getFirst());
+
+        while (!junctionBoxesToCheck.isEmpty()) {
+            JunctionBox checkedBox = junctionBoxesToCheck.stream().iterator().next();
+            junctionBoxesToCheck.remove(checkedBox);
+            unconnectedJunctionBoxes.remove(checkedBox);
+            for (JunctionBox junctionBox : checkedBox.connections) {
+                if (unconnectedJunctionBoxes.contains(junctionBox))
+                    junctionBoxesToCheck.add(junctionBox);
+            }
+        }
+
+        System.out.println("Unconnected junction boxes: " + unconnectedJunctionBoxes.size());
+        return unconnectedJunctionBoxes.isEmpty();
     }
 }
