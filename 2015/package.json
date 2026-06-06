@@ -1,0 +1,12 @@
+{
+  "type": "module",
+  "scripts": {
+    "start": "tsx day01.ts",
+    "check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "tsx": "latest",
+    "typescript": "latest"
+  }
+}

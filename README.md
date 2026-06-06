@@ -1,10 +1,11 @@
-# Advent of Code
-
-> https://adventofcode.com/
+# [Advent of Code](https://adventofcode.com/)
 
 Warning, these were coded in the name of speed, not efficiency, readability, or literally anything that is a sign of good code.
 
 My goal is to use an entirely different language each year to challenge myself and broaden my coding horizon.
+
+- 2015 -> TypeScript
+
 - 2024 -> C++
 - 2025 -> Java
 - 2026 -> who knows
